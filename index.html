@@ -63,7 +63,7 @@
 
     .reflect-q{font-family:'Merriweather',serif;font-size:1.08rem;color:var(--bg-slate);margin:18px 0 12px;line-height:1.5;font-style:italic;font-weight:700}
 
-    textarea{width:100%;min-height:100px;background:#fafafa;border:1px solid var(--border-light);border-radius:10px;padding:14px;color:var(--text-dark);font-family:'Open Sans',sans-serif;font-size:.94rem;line-height:1.6;resize:vertical;display:block;transition:border-color .2s}
+    textarea{width:100%;min-height:100px;background:#fafafa;border:1px solid var(--border-light);border-radius:10px;padding:14px;color:var(--text-dark);font-family:'Open Sans',sans-serif;font-size:16px;line-height:1.6;resize:vertical;display:block;transition:border-color .2s;-webkit-appearance:none}
     textarea:focus{outline:none;border-color:var(--accent-red);background:#fff}
     textarea::placeholder{color:var(--text-light);font-style:italic}
 
@@ -245,7 +245,7 @@ function App(){
   const setRef=(k,v)=>setRefs(r=>({...r,[k]:v}));
   const wc=(t)=>t&&t.trim()?t.trim().split(/\s+/).length:0;
   const parse=(s)=>{const m=s.match(/^([rsf])(\d+)$/);if(!m)return null;return{type:m[1],idx:parseInt(m[2]),sc:SC[parseInt(m[2])]};};
-  useEffect(()=>{document.getElementById('top-anchor')?.scrollIntoView({behavior:'smooth',block:'start'});},[si]);
+  // Removed scroll-on-stage-change useEffect to prevent mobile keyboard conflicts
 
   const Hdr=()=>(
     <>
