@@ -222,6 +222,38 @@ const SC = [
 
 const STAGES=["intro","teachings","valores","shift","domains","grounding",...SC.flatMap((_,i)=>[`r${i}`,`s${i}`,`f${i}`]),"done"];
 
+// Components defined outside App to prevent remounting on every keystroke
+const Hdr = ({si, STAGES}) => (
+  <>
+    <div className="top-bar">
+      {/* ── LOGO AREA ── Place your <img> tags inside .logo-area below */}
+      <div className="logo-area">
+        <img src="NCNLogo2025.png" alt="NCN Logo" />
+        <img src="hgilogowhiteapp.png" alt="HGI Logo" />
+      </div>
+      {/* ── WEBSITE LINK ── Replace # with your website URL */}
+      <a className="site-link" href="https://www.nationalcompadresnetwork.org" target="_blank" rel="noopener noreferrer">nationalcompadresnetwork.org</a>
+    </div>
+    <div className="container">
+      <div className="title-block" id="top-anchor">
+        <h1>Culture Heals in Crisis</h1>
+        <div className="sub">A reflective practice rooted in La Cultura Cura<br/>NCN · Healing Generations Institute</div>
+      </div>
+      <div className="dots">
+        {STAGES.slice(0,-1).map((_,i)=>(<div key={i} className={`dot ${i<si?'done':i===si?'active':''}`}/>))}
+      </div>
+      {/* ── ICON PLACEHOLDER ── Add a small decorative icon or image below */}
+      <div className="icon-holder">
+        <img src="Hummingbirdheal.svg" alt="" />
+      </div>
+    </div>
+  </>
+);
+
+const BackBtn = ({si, back}) => si > 0 ? <button className="back-btn" onClick={back}>← Back</button> : null;
+
+const Wrap = ({si, STAGES, children}) => (<><Hdr si={si} STAGES={STAGES}/><div className="container" style={{paddingTop:0}}>{children}</div></>);
+
 function App(){
   const [si,setSi]=useState(0);
   const [refs,setRefs]=useState({});
@@ -247,38 +279,10 @@ function App(){
   const parse=(s)=>{const m=s.match(/^([rsf])(\d+)$/);if(!m)return null;return{type:m[1],idx:parseInt(m[2]),sc:SC[parseInt(m[2])]};};
   // Removed scroll-on-stage-change useEffect to prevent mobile keyboard conflicts
 
-  const Hdr=()=>(
-    <>
-      <div className="top-bar">
-        {/* ── LOGO AREA ── Place your <img> tags inside .logo-area below */}
-        <div className="logo-area">
-          <img src="NCNLogo2025.png" alt="NCN Logo" />
-          <img src="hgilogowhiteapp.png" alt="HGI Logo" />
-        </div>
-        {/* ── WEBSITE LINK ── Replace # with your website URL */}
-        <a className="site-link" href="https://www.nationalcompadresnetwork.org" target="_blank" rel="noopener noreferrer">nationalcompadresnetwork.org</a>
-      </div>
-      <div className="container">
-        <div className="title-block" id="top-anchor">
-          <h1>Culture Heals in Crisis</h1>
-          <div className="sub">A reflective practice rooted in La Cultura Cura<br/>NCN · Healing Generations Institute</div>
-        </div>
-        <div className="dots">
-          {STAGES.slice(0,-1).map((_,i)=>(<div key={i} className={`dot ${i<si?'done':i===si?'active':''}`}/>))}
-        </div>
-        {/* ── ICON PLACEHOLDER ── Add a small decorative icon or image below */}
-        <div className="icon-holder">
-          <img src="Hummingbirdheal.svg" alt="" />
-        </div>
-      </div>
-    </>
-  );
+  
 
-  const BackBtn=()=>si>0?<button className="back-btn" onClick={back}>← Back</button>:null;
 
-  const Wrap=({children})=>(<><Hdr/><div className="container" style={{paddingTop:0}}>{children}</div></>);
-
-  if(stage==='intro')return(<Wrap>
+  if(stage==='intro')return(<Wrap si={si} STAGES={STAGES}>
     <div className="card">
       <div className="slabel">Bienvenidos — Welcome</div>
       <h2>This is not a test. This is a círculo.</h2>
@@ -289,7 +293,7 @@ function App(){
     </div>
   </Wrap>);
 
-  if(stage==='teachings')return(<Wrap>
+  if(stage==='teachings')return(<Wrap si={si} STAGES={STAGES}>
     <div className="card">
       <div className="slabel">The Foundation — Four Original Teachings</div>
       <h2>Before any response, these are true</h2>
@@ -299,11 +303,11 @@ function App(){
       ))}
       <div className="tip"><strong>Sit with this:</strong> Can you acknowledge that the person in front of you is already sacred — before they say a word, before they do anything to earn it? Remember that this is the beginning. <em>Begin with acknowledgment.</em></div>
       <button className="btn" onClick={go}>Continue →</button>
-      <BackBtn/>
+      <BackBtn si={si} back={back}/>
     </div>
   </Wrap>);
 
-  if(stage==='valores')return(<Wrap>
+  if(stage==='valores')return(<Wrap si={si} STAGES={STAGES}>
     <div className="card">
       <div className="slabel">The Posture — Cuatro Valores</div>
       <h2>What you carry into every encounter</h2>
@@ -324,11 +328,11 @@ function App(){
       </div>
       <div className="tip"><strong>Sit with this:</strong> Before any intervention, any assessment, any plan — these valores arrive with you. If they are not present in how you show up, no technique you use afterward will reach the person fully. <em>The valores come first.</em></div>
       <button className="btn" onClick={go}>I carry these with me →</button>
-      <BackBtn/>
+      <BackBtn si={si} back={back}/>
     </div>
   </Wrap>);
 
-  if(stage==='shift')return(<Wrap>
+  if(stage==='shift')return(<Wrap si={si} STAGES={STAGES}>
     <div className="card">
       <div className="slabel">The Shift</div>
       <h2>"What's wrong with you?" → "What happened to disconnect you?"</h2>
@@ -336,11 +340,11 @@ function App(){
       <p>When we shift the question, the whole response changes. We stop trying to fix the person and start working to restore the connection.</p>
       <div className="tip"><strong>The work of the responder:</strong> not to repair what is broken — but to walk with someone back toward what was <em>always sacred</em> in them. That path already exists. Our work is to help them find it again.</div>
       <button className="btn" onClick={go}>I carry this with me →</button>
-      <BackBtn/>
+      <BackBtn si={si} back={back}/>
     </div>
   </Wrap>);
 
-  if(stage==='domains')return(<Wrap>
+  if(stage==='domains')return(<Wrap si={si} STAGES={STAGES}>
     <div className="card">
       <div className="slabel">The Tool — Four Domains of Healing</div>
       <h2>How we see the whole person</h2>
@@ -352,11 +356,11 @@ function App(){
       </div>
       <div className="tip"><strong>What's coming next:</strong> Four scenarios. In each one you will read the situation, reflect on what you see, then practice how you'd actually open the conversation. The <em>same domain looks different depending on the setting</em> — that is the practice.</div>
       <button className="btn" onClick={go}>I'm ready to practice →</button>
-      <BackBtn/>
+      <BackBtn si={si} back={back}/>
     </div>
   </Wrap>);
 
-  if(stage==='grounding')return(<Wrap>
+  if(stage==='grounding')return(<Wrap si={si} STAGES={STAGES}>
     <div className="card">
       <div className="slabel">Before You Begin</div>
       <div className="pause-card">
@@ -365,7 +369,7 @@ function App(){
       <p>Take four slow breaths. Notice what you brought into this space today — the hard day, the heavy news, the rush. Set it down for a moment. The people in these scenarios deserve your full presence.</p>
       <p style={{color:'var(--text-light)',fontSize:'.87rem',fontStyle:'italic'}}>Your grounding is not a luxury — it is the first act of the response. A responder who hasn't found their own steadiness will bring that unsteadiness into the room.</p>
       <button className="btn" onClick={go}>I am here. Begin →</button>
-      <BackBtn/>
+      <BackBtn si={si} back={back}/>
     </div>
   </Wrap>);
 
@@ -379,7 +383,7 @@ function App(){
       const rk=`r_${sc.id}`;
       const txt=refs[rk]||'';
       const words=wc(txt);
-      return(<Wrap>
+      return(<Wrap si={si} STAGES={STAGES}>
         <div className="card">
           <div className="slabel">Scenario {idx+1} of {total} — {sc.label} · Reflection</div>
           <h2>{sc.label}</h2>
@@ -389,7 +393,7 @@ function App(){
           <div className="wc">{words} {words===1?'word':'words'}</div>
           <button className="btn" onClick={go} disabled={words<3}>{words<3?'Write a few words to continue':'I\'ve sat with this →'}</button>
           <button className="skip-btn" onClick={go}>Skip this reflection</button>
-          <BackBtn/>
+          <BackBtn si={si} back={back}/>
         </div>
       </Wrap>);
     }
@@ -403,7 +407,7 @@ function App(){
       const hasChosen=ch!==undefined;
       const pickOption=(i)=>{if(hasChosen)return;setChosen(c=>({...c,[sc.id]:i}));};
       const submitOwn=()=>setChosen(c=>({...c,[sc.id]:'own'}));
-      return(<Wrap>
+      return(<Wrap si={si} STAGES={STAGES}>
         <div className="card">
           <div className="slabel">Scenario {idx+1} of {total} — {sc.label} · The Scan</div>
           <h2>How would you open this conversation?</h2>
@@ -427,7 +431,7 @@ function App(){
             </div>
           )}
           {hasChosen&&<button className="btn" onClick={go}>Receive the Palabra Viva →</button>}
-          <BackBtn/>
+          <BackBtn si={si} back={back}/>
         </div>
       </Wrap>);
     }
@@ -441,7 +445,7 @@ function App(){
       const feedback=wasPriority?sc.fp:sc.fo;
       const chosenText=wasOwn?refs[ok]:sc.opts[ch]?.txt;
       const reflectText=refs[rk];
-      return(<Wrap>
+      return(<Wrap si={si} STAGES={STAGES}>
         <div className="card">
           <div className="slabel">Scenario {idx+1} of {total} — {sc.label} · Palabra Viva</div>
           <h2>The living word</h2>
@@ -455,7 +459,7 @@ function App(){
           {reflectText&&<div className="recap"><div className="rlbl">What you noticed at the start</div><div className="rq">{reflectText}</div></div>}
           <div className="tip movement-tip"><span className="tip-icon-holder"><img src="newollin2.png" alt="" /></span><strong>Create movement:</strong> The framework is not about being right. It's about <em>seeing more fully</em> before you act. Notice how this scenario shifts what you might do tomorrow.</div>
           <button className="btn" onClick={go}>{idx<SC.length-1?'Continue to next scenario →':'Close the círculo →'}</button>
-          <BackBtn/>
+          <BackBtn si={si} back={back}/>
         </div>
       </Wrap>);
     }
@@ -464,7 +468,7 @@ function App(){
   if(stage==='done'){
     const rCount=SC.filter(s=>refs[`r_${s.id}`]?.trim()).length;
     const oCount=SC.filter(s=>refs[`o_${s.id}`]?.trim()).length;
-    return(<Wrap>
+    return(<Wrap si={si} STAGES={STAGES}>
       <div className="card" style={{textAlign:'center'}}>
         <div className="slabel">Closing the Círculo</div>
         <h2>Asé. Ometeotl.</h2>
@@ -487,7 +491,7 @@ function App(){
         <div className="tip" style={{textAlign:'left'}}><strong>One last teaching:</strong> You are a witness, a doorway, and a relative. <em>That is enough. That is everything.</em></div>
         <div className="bendiciones">Bendiciones.</div>
         <button className="btn outline" onClick={()=>{setSi(0);setRefs({});setChosen({});setOwnOpen({});document.getElementById('top-anchor')?.scrollIntoView({behavior:'smooth',block:'start'});}}>Sit in the círculo again</button>
-        <BackBtn/>
+        <BackBtn si={si} back={back}/>
       </div>
     </Wrap>);
   }
