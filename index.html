@@ -41,12 +41,12 @@
     .title-block h1{font-family:'Merriweather',serif;font-size:1.9rem;color:var(--accent-red);line-height:1.2;margin-bottom:8px;font-weight:900}
     .title-block .sub{font-size:.88rem;color:var(--text-medium);max-width:440px;margin:0 auto;line-height:1.5}
 
-    .dots{display:flex;justify-content:center;gap:6px;margin-bottom:8px;flex-wrap:wrap;padding:0 8px}
+    .dots{display:flex;justify-content:center;gap:6px;margin-bottom:20px;flex-wrap:wrap;padding:0 8px}
     .dot{width:9px;height:9px;border-radius:50%;background:var(--border-light);border:2px solid var(--border-medium);transition:all .3s;flex-shrink:0}
     .dot.active{background:var(--accent-red);border-color:var(--accent-red);transform:scale(1.3)}
     .dot.done{background:#7a9e6b;border-color:#7a9e6b}
-    .icon-holder{display:flex;justify-content:center;align-items:center;width:100%;min-height:56px;margin:24px auto 18px;opacity:1}
-    .icon-holder img{max-height:56px;width:auto;display:block;margin:0 auto}
+    .icon-holder{display:flex;justify-content:center;align-items:center;width:100%;min-height:36px;margin:0 auto -8px;opacity:1}
+    .icon-holder img{max-height:36px;width:auto;display:block;margin:0 auto}
 
     .card{background:var(--bg-card);border:1px solid var(--border-light);border-radius:16px;padding:28px 24px;max-width:580px;margin:0 auto;box-shadow:0 4px 20px rgba(58,69,80,.08);position:relative}
 
@@ -143,6 +143,9 @@
     .bendiciones{font-family:'Merriweather',serif;font-size:1.35rem;color:var(--accent-red);font-style:italic;text-align:center;margin-top:22px;font-weight:900;letter-spacing:.03em}
 
     @media(max-width:460px){.dg,.valores-grid{grid-template-columns:1fr}}
+    .footer{text-align:center;padding:24px 16px 16px;margin-top:32px;border-top:1px solid var(--border-light);font-size:.78rem;color:var(--text-light);line-height:1.5}
+    .footer a{color:var(--accent-red);text-decoration:none}
+    .footer a:hover{text-decoration:underline}
   </style>
 </head>
 <body>
@@ -225,7 +228,7 @@ function App(){
   const [chosen,setChosen]=useState({});
   const [ownOpen,setOwnOpen]=useState({});
   const stage=STAGES[si];
-  const go=()=>{setSi(x=>x+1);window.scrollTo({top:0,behavior:'smooth'});};
+  const go=()=>{setSi(x=>x+1);document.getElementById('top-anchor')?.scrollIntoView({behavior:'smooth',block:'start'});};
   const back=()=>{
     if(si<=0)return;
     // If leaving a feedback stage, clear the scenario's selection so user can re-choose
@@ -237,12 +240,12 @@ function App(){
       setOwnOpen(o=>{const n={...o}; delete n[scId]; return n;});
     }
     setSi(x=>x-1);
-    window.scrollTo({top:0,behavior:'smooth'});
+    document.getElementById('top-anchor')?.scrollIntoView({behavior:'smooth',block:'start'});
   };
   const setRef=(k,v)=>setRefs(r=>({...r,[k]:v}));
   const wc=(t)=>t&&t.trim()?t.trim().split(/\s+/).length:0;
   const parse=(s)=>{const m=s.match(/^([rsf])(\d+)$/);if(!m)return null;return{type:m[1],idx:parseInt(m[2]),sc:SC[parseInt(m[2])]};};
-  useEffect(()=>{window.scrollTo({top:0,behavior:'smooth'});},[si]);
+  useEffect(()=>{document.getElementById('top-anchor')?.scrollIntoView({behavior:'smooth',block:'start'});},[si]);
 
   const Hdr=()=>(
     <>
@@ -256,7 +259,7 @@ function App(){
         <a className="site-link" href="https://www.nationalcompadresnetwork.org" target="_blank" rel="noopener noreferrer">nationalcompadresnetwork.org</a>
       </div>
       <div className="container">
-        <div className="title-block">
+        <div className="title-block" id="top-anchor">
           <h1>Culture Heals in Crisis</h1>
           <div className="sub">A reflective practice rooted in La Cultura Cura<br/>NCN · Healing Generations Institute</div>
         </div>
@@ -483,7 +486,7 @@ function App(){
         <div className="pv-closing">Palabra Viva<br/><span style={{fontSize:'1rem',color:'var(--text-dark)',fontWeight:400}}>Healed people heal people.</span></div>
         <div className="tip" style={{textAlign:'left'}}><strong>One last teaching:</strong> You are a witness, a doorway, and a relative. <em>That is enough. That is everything.</em></div>
         <div className="bendiciones">Bendiciones.</div>
-        <button className="btn outline" onClick={()=>{setSi(0);setRefs({});setChosen({});setOwnOpen({});window.scrollTo({top:0,behavior:'smooth'});}}>Sit in the círculo again</button>
+        <button className="btn outline" onClick={()=>{setSi(0);setRefs({});setChosen({});setOwnOpen({});document.getElementById('top-anchor')?.scrollIntoView({behavior:'smooth',block:'start'});}}>Sit in the círculo again</button>
         <BackBtn/>
       </div>
     </Wrap>);
@@ -493,5 +496,10 @@ function App(){
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
+<footer class="footer">
+  <!-- COPYRIGHT FOOTER -->
+  © 2026 Jerry Tello &amp; the National Compadres Network. All rights reserved.<br/>
+  Rooted in <em>La Cultura Cura</em>.
+</footer>
 </body>
 </html>
