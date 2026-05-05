@@ -141,6 +141,21 @@
     .ritual-mark{text-align:center;font-family:'Merriweather',serif;font-size:1.4rem;color:var(--accent-red);letter-spacing:.4em;margin:16px 0;font-weight:900}
 
     .bendiciones{font-family:'Merriweather',serif;font-size:1.35rem;color:var(--accent-red);font-style:italic;text-align:center;margin-top:22px;font-weight:900;letter-spacing:.03em}
+    .keepsake-section{margin:24px 0 16px;padding:20px 16px;background:#faf5ee;border:1px solid var(--border-light);border-radius:12px;text-align:left}
+    .keepsake-title{font-family:'Merriweather',serif;font-size:1.05rem;color:var(--bg-slate);font-weight:700;margin-bottom:6px}
+    .keepsake-desc{font-size:.88rem;color:var(--text-medium);line-height:1.6;margin-bottom:14px}
+    .keepsake-buttons{display:flex;flex-direction:column;gap:10px}
+    .keepsake-btn{padding:12px 16px;border-radius:24px;font-family:'Open Sans',sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid var(--accent-red);background:#fff;color:var(--accent-red);text-align:center}
+    .keepsake-btn:hover{background:var(--accent-red);color:#fff}
+    .keepsake-btn.primary{background:var(--accent-red);color:#fff}
+    .keepsake-btn.primary:hover{background:var(--accent-red-hover)}
+    .email-input-row{display:flex;gap:8px;margin-top:8px}
+    .email-input-row input{flex:1;padding:11px 14px;border-radius:24px;border:1px solid var(--border-light);font-family:'Open Sans',sans-serif;font-size:16px;background:#fff;color:var(--text-dark)}
+    .email-input-row input:focus{outline:none;border-color:var(--accent-red)}
+    .email-input-row button{padding:11px 20px;border-radius:24px;border:none;background:var(--accent-red);color:#fff;font-family:'Open Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;white-space:nowrap}
+    .email-input-row button:hover{background:var(--accent-red-hover)}
+    .privacy-note{margin-top:12px;padding:10px 12px;background:#fff;border-left:3px solid #7a9e6b;border-radius:0 6px 6px 0;font-size:.78rem;color:var(--text-medium);line-height:1.55;font-style:italic}
+    .privacy-note strong{color:var(--bg-slate);font-style:normal}
 
     @media(max-width:460px){.dg,.valores-grid{grid-template-columns:1fr}}
     .footer{text-align:center;padding:24px 16px 16px;margin-top:32px;border-top:1px solid var(--border-light);font-size:.78rem;color:var(--text-light);line-height:1.5}
@@ -253,6 +268,81 @@ const Hdr = ({si, STAGES}) => (
 const BackBtn = ({si, back}) => si > 0 ? <button className="back-btn" onClick={back}>← Back</button> : null;
 
 const Wrap = ({si, STAGES, children}) => (<><Hdr si={si} STAGES={STAGES}/><div className="container" style={{paddingTop:0}}>{children}</div></>);
+
+function buildKeepsake(refs, chosen, SC) {
+  const lines = [];
+  lines.push('CULTURE HEALS IN CRISIS');
+  lines.push('A Reflective Practice — NCN · Healing Generations Institute');
+  lines.push('Rooted in La Cultura Cura');
+  lines.push('');
+  lines.push('===========================================');
+  lines.push('');
+  lines.push('A reflection I sat with on ' + new Date().toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'}));
+  lines.push('');
+
+  SC.forEach((sc, i) => {
+    const reflectKey = 'r_' + sc.id;
+    const ownKey = 'o_' + sc.id;
+    const reflectText = refs[reflectKey];
+    const ch = chosen[sc.id];
+
+    lines.push('-------------------------------------------');
+    lines.push('SCENARIO ' + (i+1) + ' — ' + sc.label.toUpperCase());
+    lines.push('-------------------------------------------');
+    lines.push('');
+    lines.push('THE SCENE:');
+    lines.push(sc.scene);
+    lines.push('');
+
+    if (reflectText && reflectText.trim()) {
+      lines.push('WHAT I NOTICED:');
+      lines.push('"' + sc.rq + '"');
+      lines.push('');
+      lines.push(reflectText.trim());
+      lines.push('');
+    }
+
+    if (ch !== undefined) {
+      const wasOwn = ch === 'own';
+      const chosenText = wasOwn ? refs[ownKey] : (sc.opts[ch] && sc.opts[ch].txt);
+      const wasPriority = !wasOwn && sc.opts[ch] && sc.opts[ch].p;
+      const feedback = wasPriority ? sc.fp : sc.fo;
+
+      if (chosenText) {
+        lines.push('HOW I CHOSE TO OPEN:');
+        lines.push(chosenText);
+        lines.push('');
+      }
+
+      lines.push('PALABRA VIVA:');
+      lines.push(feedback);
+      lines.push('');
+      lines.push(sc.ft);
+      lines.push('');
+    }
+  });
+
+  lines.push('===========================================');
+  lines.push('');
+  lines.push('WHAT TO CARRY FROM THIS CÍRCULO');
+  lines.push('');
+  lines.push('• Crisis is disconnection — not deficiency. The work is always reconnection.');
+  lines.push('• Every person is sacred before they say a word. Begin with acknowledgment.');
+  lines.push('• Carry the valores with you: dignidad, respeto, cariño, confianza.');
+  lines.push('• The Four Domains are how we see the whole person. The situation tells you which domain needs you first.');
+  lines.push('• How you open the conversation matters as much as everything that follows.');
+  lines.push('• Your own grounding is the first act of the response.');
+  lines.push('• We don\'t heal people. We hold space, and people heal themselves through ancestral connection, kinship círculos, and sacred practice.');
+  lines.push('');
+  lines.push('Palabra Viva — Healed people heal people.');
+  lines.push('');
+  lines.push('Bendiciones.');
+  lines.push('');
+  lines.push('© ' + new Date().getFullYear() + ' Jerry Tello & the National Compadres Network.');
+  lines.push('Rooted in La Cultura Cura.');
+
+  return lines.join('\n');
+}
 
 function App(){
   const [si,setSi]=useState(0);
@@ -489,6 +579,31 @@ function App(){
         ))}
         <div className="pv-closing">Palabra Viva<br/><span style={{fontSize:'1rem',color:'var(--text-dark)',fontWeight:400}}>Healed people heal people.</span></div>
         <div className="tip" style={{textAlign:'left'}}><strong>One last teaching:</strong> You are a witness, a doorway, and a relative. <em>That is enough. That is everything.</em></div>
+
+        <div className="keepsake-section">
+          <div className="keepsake-title">Take this with you</div>
+          <div className="keepsake-desc">Your reflections and the Palabra Viva you received are yours to keep. Carry them forward in whatever form serves you.</div>
+          <div className="keepsake-buttons">
+            <button className="keepsake-btn primary" onClick={()=>{
+              const blob = new Blob([buildKeepsake(refs, chosen, SC)], {type:'text/plain;charset=utf-8'});
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'culture-heals-reflection.txt';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }}>Download my reflection</button>
+            <button className="keepsake-btn" onClick={()=>{
+              const subject = encodeURIComponent('My Culture Heals in Crisis reflection');
+              const body = encodeURIComponent(buildKeepsake(refs, chosen, SC));
+              window.location.href = `mailto:?subject=${subject}&body=${body}`;
+            }}>Email it to myself</button>
+          </div>
+          <div className="privacy-note"><strong>Your privacy:</strong> Nothing you wrote leaves your device unless you choose to send it. We do not store your reflections, your name, or your email. This is yours alone.</div>
+        </div>
+
         <div className="bendiciones">Bendiciones.</div>
         <button className="btn outline" onClick={()=>{setSi(0);setRefs({});setChosen({});setOwnOpen({});document.getElementById('top-anchor')?.scrollIntoView({behavior:'smooth',block:'start'});}}>Sit in the círculo again</button>
         <BackBtn si={si} back={back}/>
